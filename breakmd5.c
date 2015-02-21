@@ -3,11 +3,10 @@
 http://rosettacode.org/wiki/Permutations#C and 
 http://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
 
-reading a file into an "array" from
+reading a file into an array from
 
 https://stackoverflow.com/questions/19173442/reading-each-line-of-file-into-array
 */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,10 +15,13 @@ https://stackoverflow.com/questions/19173442/reading-each-line-of-file-into-arra
 #include <openssl/md5.h>
 
 int i;
+// anagram given
 char letters[] = "poultry outwits ants";
+// hash givrn
 char md5String[] = "4624d200580677270a54ccff86b9610e";
 
-int compare (const void * a, const void * b) {
+int compare (const void * a, const void * b) 
+{
   return *(const char *)a - *(const char *)b;
 }
 
@@ -27,35 +29,42 @@ int check(char **x, int len)
 {
   int i;
   int string_length;
-  for (i = 0; i < len; i++){
-    if (i == 0){
+  for (i = 0; i < len; i++)
+  {
+    if (i == 0)
+    {
       string_length = strlen(x[i]);
     } 
-    else{
+    else
+    {
       string_length = string_length + strlen(x[i]);
     }
     string_length = string_length + strlen("  ");
   }
   char string_to_check[string_length * sizeof(char)];
-  for (i = 0; i < len; i++){
-    if (i == 0){
+  for (i = 0; i < len; i++)
+  {
+    if (i == 0)
+    {
       strcpy(string_to_check, x[i]);
       strcat(string_to_check, " ");
     }
-    else if (i > 0 && i < len - 1){
+    else if (i > 0 && i < len - 1)
+    {
       strcat(string_to_check, x[i]);
       strcat(string_to_check, " ");
     }
-    else{
+    else
+    {
       strcat(string_to_check, x[i]);
     }
   }
+
   unsigned char result[MD5_DIGEST_LENGTH];
-  
   MD5(string_to_check, strlen(string_to_check), result);
   char result_as_hex[sizeof(md5String)];
 
-  // output
+  // format to hex
   for(i = 0; i < MD5_DIGEST_LENGTH; i++){
     char temp_hex[12];
     sprintf(temp_hex, "%02x", result[i]);
@@ -66,14 +75,16 @@ int check(char **x, int len)
       strcat(result_as_hex, temp_hex);
     }
   }
+  // compare to hash given
   if (strcmp(result_as_hex, md5String) == 0){
     printf("%s\n", string_to_check);
   }
   return 1;
 }
 
-char next_lex_perm(char **a, int n) {
-# define swap(i, j) {t = a[i]; a[i] = a[j]; a[j] = t;}
+char next_lex_perm(char **a, int n) 
+{
+# define swap(i, j){t = a[i]; a[i] = a[j]; a[j] = t;}
   int k, l; 
   char *t;
  
@@ -84,11 +95,12 @@ char next_lex_perm(char **a, int n) {
  
   /* 2. Find the largest index l such that a[k] < a[l]. Since k + 1 is
      such an index, l is well defined */
+  
   for (l = n - 1; a[l] <= a[k]; l--);
- 
+  
   /* 3. Swap a[k] with a[l] */
-  swap(k, l);
- 
+    swap(k, l);
+
   /* 4. Reverse the sequence from a[k + 1] to the end */
   for (k++, l = n - 1; l > k; l--, k++)
     swap(k, l);
@@ -98,77 +110,78 @@ char next_lex_perm(char **a, int n) {
  
 void perm(char **x, int n, int callback(char **, int))
 {
-  do {
+  do 
+  {
     if (callback) callback(x, n);
   } while (next_lex_perm(x, n));
 }
  
 void combinationUtil(char **arr, char **data, int start, int end, int index, int r)
 {
-  qsort(letters, strlen(letters), 1, compare);
-    
-    // Current combination is ready to be printed, print it
-    if (index == r)
+  qsort(letters, strlen(letters), 1, compare);  
+  if (index == r)
+  {
+    int current_length = strlen("  ");
+    int j;
+    for (j=0; j<r; j++)
     {
-      int current_length = strlen("  ");
-      int j;
-      for (j=0; j<r; j++){
-        current_length = current_length + strlen(data[j]);
-      }
-      if (current_length == strlen(letters)){                                     
-        char valid_anagram[current_length * sizeof(char)]; 
-        char *ptr_anagram[r];
-        strcpy(valid_anagram, data[0]);                                         
-        strcat(valid_anagram, " ");
-        ptr_anagram[0] = data[0];                             
-        int k;
-        for (k=1; k<r; k++){ 
-          ptr_anagram[k] = data[k];                                       
-          strcat(valid_anagram, data[k]);                             
-          if (k < r-1){                                                
-            strcat(valid_anagram, " ");                      
-          }
+      current_length = current_length + strlen(data[j]);
+    }
+    if (current_length == strlen(letters))
+    {                                     
+      char valid_anagram[current_length * sizeof(char)]; 
+      char *ptr_anagram[r];
+      strcpy(valid_anagram, data[0]);                                         
+      strcat(valid_anagram, " ");
+      ptr_anagram[0] = data[0];                             
+      int k;
+      for (k=1; k<r; k++){ 
+        ptr_anagram[k] = data[k];                                       
+        strcat(valid_anagram, data[k]);                             
+        if (k < r-1)
+        {                                                
+          strcat(valid_anagram, " ");                      
         }
-        valid_anagram[current_length]='\0';
-        current_length = strlen(valid_anagram);
-        char anagram_sorted[current_length * sizeof(char)];
-        memset(anagram_sorted, '\0', sizeof(anagram_sorted));
-        strcpy(anagram_sorted, valid_anagram);
-
-        qsort(anagram_sorted, strlen(anagram_sorted), 1, compare);
-        int comparison;
-          comparison = strcmp(anagram_sorted, letters);
-          if(comparison == 0){
-              perm(ptr_anagram, r, check);
-          }
-        }         
-        return;
-    }
-    // replace index with all possible elements. The condition
-    // "end-i+1 >= r-index" makes sure that including one element
-    // at index will make a combination with remaining elements
-    // at remaining positions
-    int i;
-    for (i=start; i<=end && end-i+1 >= r-index; i++)
-    {
-        data[index] = arr[i];
-        combinationUtil((char **)arr, (char **)data, i+1, end, index+1, r);
-    }
+      }
+      valid_anagram[current_length]='\0';
+      current_length = strlen(valid_anagram);
+      char anagram_sorted[current_length * sizeof(char)];
+      memset(anagram_sorted, '\0', sizeof(anagram_sorted));
+      strcpy(anagram_sorted, valid_anagram);
+      qsort(anagram_sorted, strlen(anagram_sorted), 1, compare);
+      int comparison;
+      comparison = strcmp(anagram_sorted, letters);
+      // if a combination is a valid anagram of the phrase given, permute, hash and compare to hash given
+      if(comparison == 0)
+      {
+        perm(ptr_anagram, r, check);
+      }
+    }         
+    return;
+  }
+  // replace index with all possible elements. The condition
+  // "end-i+1 >= r-index" makes sure that including one element
+  // at index will make a combination with remaining elements
+  // at remaining positions
+  int i;
+  for (i=start; i<=end && end-i+1 >= r-index; i++)
+  {
+    data[index] = arr[i];
+    combinationUtil((char **)arr, (char **)data, i+1, end, index+1, r);
+  }
 }
-
-// The main function that prints all combinations of size r
-// in arr[] of size n. This function mainly uses combinationUtil()
+// The function that prints all combinations of size r
+// in **arr of size n. This function mainly uses combinationUtil()
 void printCombination(char **arr, int n, int r)
 {
     // A temporary array to store all combination one by one
     char **data[r];
- 
     // Print all combination using temprary array 'data[]'
     combinationUtil((char **)arr, (char **)data, 0, n-1, 0, r);
 }
- 
-char ** read_file_into_array(char path[]){
-    
+
+char ** read_file_into_array(char path[])
+{    
   int lines_allocated = 128;
   int max_line_len = 100;
 
@@ -227,12 +240,14 @@ int main()
   // Find character length of words
   int words_length;
   int j;
-  for (j = 0; j < i; j++){
+  for (j = 0; j < i; j++)
+  {
     words_length = words_length + strlen(words[j]);
   }
   // Concatenate words
   char* words_concat = (char *)malloc(sizeof(char) * words_length + 1);
-  for(j = 0; j < i; j++){    
+  for(j = 0; j < i; j++)
+  {    
       strcat(words_concat, words[j]);
   } 
   // Sort words_concat
@@ -249,7 +264,8 @@ int main()
     words_concat = (char *)realloc(words_concat,sizeof(char*)*words_concat_length);
   }
   // Remove allowed letters
-  for (j=0; j < words_concat_length; j++){
+  for (j=0; j < words_concat_length; j++)
+  {
     int k;
     bool flag = false;
     for (k=0; k < strlen(letters); k++){
@@ -264,29 +280,23 @@ int main()
     if (flag==true) continue;
     words_concat = realloc(words_concat,sizeof(char*)*words_concat_length);
   }
-  
-  //printf("%i\n", strlen(words_concat));
-
   char* c = words_concat;
-  /*while (*c) {
-    putc(*c++, stdout);
-    printf("\n");
-  }
-  */
+  
   // remove words with disallowed letters
   words_length = i;
-  printf("%i\n", words_length);
-
-  for (j=0; j < words_length; j++){
+  
+  for (j=0; j < words_length; j++)
+  {
     char* c = words_concat;  
-    while(*c){
-
+    while(*c)
+    {
       if(strchr(words[j], *c)){
         int current_length = strlen(words[j]);
         free((words)[j]);
         (words_length)--;
         int k;
-        for(k = j; k <= words_length; k++){
+        for(k = j; k <= words_length; k++)
+        {
           // Shift elements over to the left by 1 to close the gap
           words[k] = words[k+1];
         }
@@ -296,9 +306,7 @@ int main()
       c++;    
     }
   }
-  //for(j = 0; j < words_length; j++)
-  //    printf("%s\n", words[j]);
-    
+
   int r = 3;
   int n = words_length;
   printCombination(words, n, r);
