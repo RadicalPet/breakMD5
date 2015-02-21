@@ -239,7 +239,7 @@ int main()
   qsort(letters, strlen(letters), 1, compare);
 
   char path[] = "testlist.txt";
-  char ** words = read_file_into_array(path);
+  char **words = read_file_into_array(path);
 
   // Find character length of words
   int words_length;
@@ -284,14 +284,14 @@ int main()
     if (flag==true) continue;
     words_concat = realloc(words_concat,sizeof(char*)*words_concat_length);
   }
-  char* c = words_concat;
+  char *c = words_concat;
   
   // remove words with disallowed letters
   words_length = i;
   
   for (j=0; j < words_length; j++)
   {
-    char* c = words_concat;  
+    char *c = words_concat;  
     while(*c)
     {
       if(strchr(words[j], *c)){
