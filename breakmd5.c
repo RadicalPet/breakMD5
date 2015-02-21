@@ -65,18 +65,22 @@ int check(char **x, int len)
   char result_as_hex[sizeof(md5String)];
 
   // format to hex
-  for(i = 0; i < MD5_DIGEST_LENGTH; i++){
+  for(i = 0; i < MD5_DIGEST_LENGTH; i++)
+  {
     char temp_hex[12];
     sprintf(temp_hex, "%02x", result[i]);
-    if (i == 0){
+    if (i == 0)
+    {
       strcpy(result_as_hex, temp_hex);
     }
-    else{
+    else
+    {
       strcat(result_as_hex, temp_hex);
     }
   }
   // compare to hash given
-  if (strcmp(result_as_hex, md5String) == 0){
+  if (strcmp(result_as_hex, md5String) == 0)
+  {
     printf("%s\n", string_to_check);
   }
   return 1;
