@@ -17,7 +17,7 @@ https://stackoverflow.com/questions/19173442/reading-each-line-of-file-into-arra
 int i;
 // anagram given
 char letters[] = "poultry outwits ants";
-// hash givrn
+// hash given
 char md5String[] = "4624d200580677270a54ccff86b9610e";
 
 int compare (const void * a, const void * b) 
@@ -91,20 +91,15 @@ char next_lex_perm(char **a, int n)
 # define swap(i, j){t = a[i]; a[i] = a[j]; a[j] = t;}
   int k, l; 
   char *t;
- 
   /* 1. Find the largest index k such that a[k] < a[k + 1]. If no such
         index exists, the permutation is the last permutation. */
   for (k = n - 1; k && a[k - 1] >= a[k]; k--);
   if (!k--) return 0;
- 
   /* 2. Find the largest index l such that a[k] < a[l]. Since k + 1 is
      such an index, l is well defined */
-  
   for (l = n - 1; a[l] <= a[k]; l--);
-  
   /* 3. Swap a[k] with a[l] */
     swap(k, l);
-
   /* 4. Reverse the sequence from a[k + 1] to the end */
   for (k++, l = n - 1; l > k; l--, k++)
     swap(k, l);
@@ -117,7 +112,8 @@ void perm(char **x, int n, int callback(char **, int))
   do 
   {
     if (callback) callback(x, n);
-  } while (next_lex_perm(x, n));
+  } 
+  while (next_lex_perm(x, n));
 }
  
 void combinationUtil(char **arr, char **data, int start, int end, int index, int r)
@@ -188,9 +184,8 @@ char ** read_file_into_array(char path[])
 {    
   int lines_allocated = 128;
   int max_line_len = 100;
-
   /* Allocate lines of text */
- char **words = (char **)malloc(sizeof(char*)*lines_allocated);
+  char **words = (char **)malloc(sizeof(char*)*lines_allocated);
   if (words==NULL)
   {
     fprintf(stderr,"Out of memory (1).\n");
@@ -260,7 +255,8 @@ int main()
   int words_concat_length = strlen(words_concat);
   for (j=0;j < words_concat_length; j++)
   {
-    if (words_concat[j] == words_concat[j+1]){
+    if (words_concat[j] == words_concat[j+1])
+    {
       memmove(&words_concat[j], &words_concat[j + 1], words_concat_length - j);
       words_concat_length--;
       j--;
@@ -272,8 +268,10 @@ int main()
   {
     int k;
     bool flag = false;
-    for (k=0; k < strlen(letters); k++){
-      if (words_concat[j] == letters[k]){
+    for (k=0; k < strlen(letters); k++)
+    {
+      if (words_concat[j] == letters[k])
+      {
         memmove(&words_concat[j], &words_concat[j + 1], words_concat_length);
         words_concat_length = words_concat_length -1;
         j--;
@@ -285,7 +283,6 @@ int main()
     words_concat = realloc(words_concat,sizeof(char*)*words_concat_length);
   }
   char *c = words_concat;
-  
   // remove words with disallowed letters
   words_length = i;
   
@@ -294,7 +291,8 @@ int main()
     char *c = words_concat;  
     while(*c)
     {
-      if(strchr(words[j], *c)){
+      if(strchr(words[j], *c))
+      {
         int current_length = strlen(words[j]);
         free((words)[j]);
         (words_length)--;
